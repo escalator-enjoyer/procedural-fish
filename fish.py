@@ -25,7 +25,7 @@ class Point:
 class Fish:
     def __init__(self, scale: float):
         self.scale = scale
-        self.min_scale = 0.5
+        self.min_scale = 0.75
         self.max_scale = 2.5
         self.length = 17
         self.radii = [self.scale * (-0.5 * (i-2.7)**2 + 20) if i < 8 else self.scale * max(2, (15-i + 2)) for i in range(17)]
@@ -45,8 +45,7 @@ class Fish:
         self.min_speed = 0.05
 
     def apply_force(self, force):
-        # f = ma
-        self.acceleration += force #/ self.scale
+        self.acceleration += force
 
     def seek(self, target):
         if (target - self.head.position).magnitude() == 0: self.head.position += Vector2(uniform(-0.1, 0.1), uniform(-0.1, 0.1))
