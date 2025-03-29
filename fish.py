@@ -26,7 +26,7 @@ class Fish:
     def __init__(self, scale: float):
         self.scale = scale
         self.min_scale = 0.5
-        self.max_scale = 3.5
+        self.max_scale = 2.5
         self.length = 17
         self.radii = [self.scale * (-0.5 * (i-2.7)**2 + 20) if i < 8 else self.scale * max(2, (15-i + 2)) for i in range(17)]
         self.points = [Point(Vector2([-1 * i + WIDTH//2, HEIGHT//2]), self.radii[i]) for i in range(len(self.radii))]
@@ -156,7 +156,7 @@ class Fish:
     def update_scale(self, new_scale: float):
         self.scale = max(self.min_scale, new_scale)
         if self.scale > self.max_scale:
-            self.update_scale(self.scale * 0.5)
+            self.update_scale(self.scale / 3)
         self.thrust_strength = 0.25 * self.scale
         self.max_speed = 50 / self.scale
         self.radii = [self.scale * (-0.5 * (i-2.7)**2 + 20) if i < 8 else self.scale * (15 - i+2) for i in range(self.length)]
