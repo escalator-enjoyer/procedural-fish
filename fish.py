@@ -203,11 +203,19 @@ def calculate_head_tail(fish: Fish):
     
     return head_front, tail_back
 
-food_image = image.load("shrimp.png")
-food_image = transform.scale(food_image, (FOOD_RADIUS * 2, FOOD_RADIUS * 2))
-def draw_food():
-    for food in food_list:
-        screen.blit(food_image, rect.Rect(int(food.x), int(food.y), 1, 1))
+try:
+    food_image = image.load("shrimp.png")
+    food_image = transform.scale(food_image, (FOOD_RADIUS * 2, FOOD_RADIUS * 2))
+except FileNotFoundError:
+    food_image = None
+if food_image:
+    def draw_food():
+        for food in food_list:
+            screen.blit(food_image, rect.Rect(int(food.x), int(food.y), 1, 1))
+else:
+    def draw_food():
+        for food in food_list:
+            draw.circle(screen, (150, 100, 50), (int(food.x), int(food.y)), FOOD_RADIUS, FOOD_RADIUS//2)
 
 def draw_fish(fish: Fish):
     points = fish.points
