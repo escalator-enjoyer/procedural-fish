@@ -177,7 +177,6 @@ class Fish:
     def eat_food(self):
         self.update_scale(min(self.scale * 1.1, 3))
 
-
 def constrain_angle(angle: float, anchor: float, constraint: float):
     diff = relative_angle_difference(angle, anchor)
     if abs(diff) <= constraint:
