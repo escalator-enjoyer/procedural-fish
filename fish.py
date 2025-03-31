@@ -43,6 +43,8 @@ class Fish:
         self.wander_angle = random() * 2 * pi
         self.max_speed = 50 / self.scale
         self.min_speed = 0.05
+        self.last_out_time = 0
+        self.out_of_water = False
 
     def apply_force(self, force):
         self.acceleration += force
@@ -122,6 +124,7 @@ class Fish:
 
         self.wiggle_phase += 0.1 * self.wiggle_freq
         self.velocity *= 0.8 # damping
+        self.update_scale(self.scale * (1 - (1/(FPS * 100) * 0.1))) # slightly reduce size over time (0.1% per second)
         
         # border repulsion (the fish government doesnt like emigrants)
         margin = self.head.radius * 5
@@ -138,8 +141,15 @@ class Fish:
             avoid_force.normalize_ip()
             self.apply_force(avoid_force * self.max_force * 5)
         
-        # borders kill
-        if not (0 <= self.head.position.x <= WIDTH and 0 <= self.head.position.y <= HEIGHT):
+        # borders are FORGIVING !! fish will go back by themselves (fish government)
+        if not (0 <= self.head.position.x <= WIDTH and 0 <= self.head.position.y <= HEIGHT) and not self.out_of_water:
+            self.out_of_water = True
+            self.last_out_time = clock.get_time()
+        else:
+            self.out_of_water = False
+        
+        # kill after 10 seconds (the fish had its chances)
+        if clock.get_time() - self.last_out_time > 10 and self.out_of_water:
             self.update_scale(self.scale ** 0.9)
             self.respawn()
 
@@ -151,6 +161,7 @@ class Fish:
         self.velocity = Vector2(0, 0)
         self.acceleration = Vector2(0, 0)
         self.wander_angle = random() * 2 * pi
+        self.out_of_water = False
 
     def update_scale(self, new_scale: float):
         self.scale = max(self.min_scale, new_scale)
